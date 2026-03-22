@@ -1,5 +1,7 @@
 import threading
 import uvicorn
+import multiprocessing
+
 
 from app.config import settings
 from app.rag.embedder import Embedder
@@ -28,29 +30,35 @@ def create_pipeline():
 
 
 def run_fastapi():
-    uvicorn.run("app.api.main:app", host="0.0.0.0", port=8000)
+    import uvicorn
+    uvicorn.run(
+        "app.api.main:app",
+        host="0.0.0.0",
+        port=8000,
+        reload=False
+    )
 
 
 def main():
-    # ✅ Auto ingestion
     ingest_if_needed()
 
-    # Create pipeline
     pipeline = create_pipeline()
-
-    # Inject into FastAPI
     set_pipeline(pipeline)
 
-    # Run FastAPI in background
-    threading.Thread(target=run_fastapi, daemon=True).start()
+    # FastAPI in separate process
+    process = multiprocessing.Process(target=run_fastapi)
+    process.start()
 
-    # Start Gradio UI
+    print("✅ FastAPI running at http://localhost:8000/docs")
+
     ui = create_ui(pipeline)
     threading.Thread(
         target=lambda: ui.launch(server_name="0.0.0.0", server_port=7860),
-        daemon=True).start()
+        daemon=True
+    ).start()
 
-    # Run Telegram bot (blocking)
+    print("✅ Gradio running at http://localhost:7860")
+
     run_bot(pipeline)
 
 
