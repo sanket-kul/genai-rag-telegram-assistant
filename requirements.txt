@@ -1,0 +1,8 @@
+python-telegram-bot==20.7
+fastapi
+uvicorn
+gradio
+numpy
+python-dotenv
+groq
+google-genai
