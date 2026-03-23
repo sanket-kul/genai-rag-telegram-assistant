@@ -56,25 +56,11 @@ The system enables users to interact via Telegram and receive **accurate, contex
 
 ## 🏗️ Architecture
 
-```
-User (Telegram)
-      │
-      ▼
-Telegram Bot (Handlers)
-      │
-      ▼
-RAG Pipeline
- ├── Retriever (Cosine Similarity)
- ├── Embedder (Sentence Transformers)
- ├── Vector Store (SQLite)
- ├── LLM Service (Ollama/OpenAI)
- │
- ├── Memory (Last N interactions)
- └── Cache (Query → Response)
-      │
-      ▼
-Formatted Response (with sources)
-```
+Interactive interface for querying the RAG system locally.
+
+<p align="center">
+  <img src="\app\images\mermaid-diagram.png" width="800"/>
+</p>
 
 ---
 
@@ -120,7 +106,7 @@ Formatted Response (with sources)
 | Bot Interface  | python-telegram-bot       |
 | Embeddings     | sentence-transformers     |
 | Vector Storage | SQLite                    |
-| LLM            | Ollama (Mistral) / OpenAI |
+| LLM            | GROQ / Google API         |
 | Backend        | Python                    |
 | Similarity     | NumPy (Cosine Similarity) |
 | Deployment     | Docker                    |
@@ -246,23 +232,45 @@ python -m app.main
 
 ---
 
-## 📸 Demo (Recommended)
+## 🔐 Production Considerations
 
-Include:
+* Add structured logging (e.g., `loguru`)
+* Implement retry + timeout handling
+* Add rate limiting for bot endpoints
+* Secure API keys via environment variables
+* Integrate monitoring (Prometheus/Grafana)
 
-* Telegram interaction screenshot
-* Query-response flow
-* Source attribution example
+---
 
-Example:
+## 🖥️ User Interface & Bot Demonstration 
 
-```
-User: /ask What is refund policy?
-Bot: Refunds are processed within 7 days...
+<p align="center">
+  <img src="\app\images\ask_leave_policy_gradio.jpeg" width="800"/>
+</p>
 
-Sources:
-- policy.md
-```
+<p align="center">
+  <img src="\app\images\ask_leave_policy_telegram.jpeg" width="800"/>
+</p>
+
+<p align="center">
+  <img src="\app\images\ask_tea_gradio.jpeg" width="800"/>
+</p>
+
+<p align="center">
+  <img src="\app\images\ask_tea_telegram.jpeg" width="800"/>
+</p>
+
+<p align="center">
+  <img src="\app\images\summarize_docker_gradio.jpeg" width="800"/>
+</p>
+
+<p align="center">
+  <img src="\app\images\summarize_docker_telegram.jpeg" width="800"/>
+</p>
+
+<p align="center">
+  <img src="\app\images\fastapi_swagger_docs.jpeg" width="800"/>
+</p>
 
 ---
 
@@ -274,28 +282,6 @@ Sources:
 * Streaming responses (token-wise)
 * Multi-agent workflows (LangGraph)
 * RAG evaluation (RAGAS framework)
-
----
-
-## 🧠 Design Rationale
-
-| Decision             | Reason                      |
-| -------------------- | --------------------------- |
-| SQLite               | Zero external dependency    |
-| MiniLM               | Fast + efficient embeddings |
-| Ollama               | Local inference, no cost    |
-| Modular architecture | Easy scaling & testing      |
-| LLM abstraction      | Vendor flexibility          |
-
----
-
-## 🔐 Production Considerations
-
-* Add structured logging (e.g., `loguru`)
-* Implement retry + timeout handling
-* Add rate limiting for bot endpoints
-* Secure API keys via environment variables
-* Integrate monitoring (Prometheus/Grafana)
 
 ---
 
@@ -314,7 +300,3 @@ AI Engineer | GenAI Developer
 If you find this project useful, consider giving it a ⭐ and contributing!
 
 ---
-
-## 📄 License
-
-This project is for educational and assessment purposes.
